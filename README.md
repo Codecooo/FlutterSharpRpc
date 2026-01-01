@@ -1,9 +1,9 @@
 ![FlutterCsharpRPC](https://raw.githubusercontent.com/YehudaKremer/FlutterCsharpRpc/main/docs/assets/csharp_rpc_logo.png)
-[![pub package](https://img.shields.io/pub/v/csharp_rpc.svg?color=blue)](https://pub.dev/packages/csharp_rpc)
+[![pub package](https://img.shields.io/pub/v/csharp_rpc.svg?color=blue)](https://pub.dev/packages/codecooo_csharp_rpc)
 
 # Flutter Csharp RPC
 This repo is a fork from the original [FlutterCsharpRpc](https://github.com/YehudaKremer/FlutterCsharpRpc). This fork update and improve upon the original one with feature such
-as Server notifications and a test for native AOT compatibility. <br>
+as Server notifications and a test for native AOT compatibility. 
 
 
 With this package we can execute C# code from Dart (Flutter) application via JSON-RPC protocol.
