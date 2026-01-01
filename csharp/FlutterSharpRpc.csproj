@@ -1,16 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<Version>0.0.1</Version>
+		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+		<Version>0.0.2</Version>
+		<PackageId>Codecooo.FlutterSharpRpc</PackageId>
 		<Title>Execute C# code from Dart (Flutter) application.</Title>
-		<Authors>yehudak</Authors>
+		<Authors>Codecooo</Authors>
 		<Description>With this package we can execute C# code from Dart (Flutter) application via JSON-RPC protocol.</Description>
-		<PackageProjectUrl>https://github.com/YehudaKremer/FlutterCsharpRpc</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/Codecooo/FlutterSharpRpc</PackageProjectUrl>
 		<PackageIcon>csharp_rpc_nuget_logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/YehudaKremer/FlutterCsharpRpc</RepositoryUrl>
+		<RepositoryUrl>https://github.com/Codecooo/FlutterSharpRpc</RepositoryUrl>
 		<PackageTags>Flutter; Dart; RPC; json-rpc; ffi; Csharp</PackageTags>
+		<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>		
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
@@ -34,8 +36,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Nerdbank.Streams" Version="2.9.112" />
-		<PackageReference Include="StreamJsonRpc" Version="2.14.24" />
+		<PackageReference Include="Nerdbank.MessagePack" Version="1.0.11" />
+		<PackageReference Include="Nerdbank.Streams" Version="2.13.16" />
+		<PackageReference Include="StreamJsonRpc" Version="2.23.32-alpha" />
 	</ItemGroup>
 
 </Project>

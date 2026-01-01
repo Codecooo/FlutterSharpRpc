@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlutterCsharpRpc", "FlutterCsharpRpc.csproj", "{219D50D4-7759-428B-9654-0610900A6ABF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlutterSharpRpc", "FlutterSharpRpc.csproj", "{219D50D4-7759-428B-9654-0610900A6ABF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

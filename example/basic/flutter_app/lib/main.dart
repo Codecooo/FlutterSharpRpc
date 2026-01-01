@@ -7,20 +7,20 @@ import 'types.dart';
 late CsharpRpc csharpRpc;
 
 Future<void> main() async {
-  runApp(const MyApp());
-
   /// The path to our C# program.
   /// In release-mode we will publish the C# app to the flutter build path:
   /// "..\flutter_app\build\windows\runner\Release\csharp"
   /// so, we can use the path: "csharp/CsharpApp.exe"
   var pathToCsharpExecutableFile = kReleaseMode
-      ? 'csharp/CsharpApp.exe'
-      : "../CsharpApp/bin/Debug/net7.0-windows/CsharpApp.exe";
+      ? 'csharp/CsharpApp'
+      : "/home/lagita/flutter/FlutterProjects/FlutterSharpRpc/example/basic/CsharpApp/bin/Release/net10.0/linux-x64/publish/CsharpApp";
 
   /// Create and start CsharpRpc instance.
   /// you can create this instance anywhere in your program, but remember to
   /// dispose is by calling 'csharpRpc.dispose()'
   csharpRpc = await CsharpRpc(pathToCsharpExecutableFile).start();
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -34,13 +34,34 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    csharpRpc.notifications.listen((notif) {
+      updateProgress(notif.params);
+    });
+  }
+
   final _textFieldController = TextEditingController();
 
-  MyHomePage({super.key});
+  final _textNotifController = TextEditingController();
 
   void _updateTextField(String text) {
     _textFieldController.value = TextEditingValue(text: text);
+  }
+
+  void updateProgress(String text) {
+    _textNotifController.value = TextEditingValue(
+        text: text);
   }
 
   @override
@@ -108,6 +129,20 @@ class MyHomePage extends StatelessWidget {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'C# Response',
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: 618,
+              child: TextField(
+                controller: _textNotifController,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'C# Notification',
                 ),
               ),
             )
