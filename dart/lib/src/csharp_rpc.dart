@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
-import 'package:csharp_rpc/src/models/rpc_notification.dart';
+import 'package:codecooo_csharp_rpc/src/models/rpc_notification.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 import 'csharp_rpc_request.dart';
