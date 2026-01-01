@@ -3,6 +3,9 @@
 [![pub package](https://img.shields.io/pub/v/csharp_rpc.svg?color=blue)](https://pub.dev/packages/csharp_rpc) [![issues-closed](https://img.shields.io/github/issues-closed/YehudaKremer/FlutterCsharpRpc?color=green)](https://github.com/YehudaKremer/FlutterCsharpRpc/issues?q=is%3Aissue+is%3Aclosed) [![issues-open](https://img.shields.io/github/issues-raw/YehudaKremer/FlutterCsharpRpc)](https://github.com/YehudaKremer/FlutterCsharpRpc/issues)
 
 # Flutter Csharp RPC
+This repo is a fork from the original [FlutterCsharpRpc](https://github.com/YehudaKremer/FlutterCsharpRpc). This fork update and improve upon the original one with feature such
+as Server notifications and a test for native AOT compatibility. <br>
+
 
 With this package we can execute C# code from Dart (Flutter) application via JSON-RPC protocol.
 
@@ -72,11 +75,11 @@ var currentDateTime = await csharpRpc.invoke(method: "GetCurrentDateTime");
 
 ## 📋 C# Setup
 
-In your C# project, add the `FlutterCsharpRpc` Nuget package as a new dependency with
+In your C# project, add the `FlutterSharpRpc` Nuget package as a new dependency with
 the following command:
 
 ```console
-PS c:\src\csharp_project> dotnet add package FlutterCsharpRpc
+PS c:\src\csharp_project> dotnet add package FlutterSharpRpc
 ```
 
 In your program code, start the JSON-RPC server by calling the `StartAsync` method:
@@ -99,6 +102,20 @@ public class Server
         return DateTime.Now;
     }
 }
+```
+
+## Native AOT Compatibility for C#
+This package for c# is somewhat compatible for AOT and trimming. You need to provide your own JsonSerializerContext for your own types and register your methods explicitly using delegate to avoid reflection. To start the server you need to use `StartWithExplicitAsync` rather than the usual `StartAsync`. This is the example:
+
+``` csharp
+await CsharpRpcServer.StartWithExplicitAsync(new Server(), JsonContext.Default,
+    async (rpc, server) =>
+    {
+        rpc.AddLocalRpcMethod("GetCurrentDateTime", server.GetCurrentDateTime);
+        rpc.AddLocalRpcMethod("SumNumbers", server.SumNumbers);
+        rpc.AddLocalRpcMethod("GetFilesInFolder", server.GetFilesInFolder);
+    });
+
 ```
 
 ## ⚡ Demo
@@ -128,7 +145,7 @@ but when we build our Flutter app in Release mode, its time to move and publish 
 Note: Those publish instructions are also suitable publish/deploy with [MSIX](https://pub.dev/packages/msix).
 
 ## 🙏 Credit
-
+Thanks to YehudaKremer for making the original [FlutterCsharpRpc](https://github.com/YehudaKremer/FlutterCsharpRpc) which this package based from. <br>
 This package based on Michael K Snead's article on medium: [Flutter, C# and JSON RPC](https://medium.com/@aikeru/flutter-c-and-json-rpc-f325be6764bd)
 
 ---
