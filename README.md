@@ -1,6 +1,5 @@
 ![FlutterCsharpRPC](https://raw.githubusercontent.com/YehudaKremer/FlutterCsharpRpc/main/docs/assets/csharp_rpc_logo.png)
-
-[![pub package](https://img.shields.io/pub/v/csharp_rpc.svg?color=blue)](https://pub.dev/packages/csharp_rpc) [![issues-closed](https://img.shields.io/github/issues-closed/YehudaKremer/FlutterCsharpRpc?color=green)](https://github.com/YehudaKremer/FlutterCsharpRpc/issues?q=is%3Aissue+is%3Aclosed) [![issues-open](https://img.shields.io/github/issues-raw/YehudaKremer/FlutterCsharpRpc)](https://github.com/YehudaKremer/FlutterCsharpRpc/issues)
+[![pub package](https://img.shields.io/pub/v/csharp_rpc.svg?color=blue)](https://pub.dev/packages/csharp_rpc)
 
 # Flutter Csharp RPC
 This repo is a fork from the original [FlutterCsharpRpc](https://github.com/YehudaKremer/FlutterCsharpRpc). This fork update and improve upon the original one with feature such
