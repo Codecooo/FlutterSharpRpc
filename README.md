@@ -51,17 +51,17 @@ then we convert the result to a response type `FilesInFolderResponse` with the `
 
 ## 📋 Dart/Flutter Setup
 
-In your `pubspec.yaml`, add the `csharp_rpc` package as a new dependency with
+In your `pubspec.yaml`, add the `codecooo_csharp_rpc` package as a new dependency with
 the following command:
 
 ```console
-PS c:\src\flutter_project> flutter pub add csharp_rpc
+dart pub add codecooo_csharp_rpc
 ```
 
 In your program code, create and use the `CsharpRpc` class to invoke methods:
 
 ```Dart
-import 'package:csharp_rpc/csharp_rpc.dart';
+import 'package:codecooo_csharp_rpc/codecooo_csharp_rpc.dart';
 
 // create instance of CsharpRpc
 var pathToCsharpExecutableFile = "<path_to_your_csharp_app>/CsharpApp.exe";
@@ -78,7 +78,7 @@ In your C# project, add the `FlutterSharpRpc` Nuget package as a new dependency 
 the following command:
 
 ```console
-PS c:\src\csharp_project> dotnet add package FlutterSharpRpc
+dotnet add package Codecooo.FlutterSharpRpc
 ```
 
 In your program code, start the JSON-RPC server by calling the `StartAsync` method:
@@ -103,6 +103,51 @@ public class Server
 }
 ```
 
+## Send Notification From Server to Flutter
+If you want your server to make notification to flutter, implement the ``IRpcNotifierAware`` to your server class and then once you start the server the server class will have notifier instance registered that you can use to notify flutter. Remember notification dont have any response so it is fire and forget for example background process update. Here is the example
+
+``` csharp
+public class Server : IRpcNotifierAware 
+{
+    // IRpcNotifier instance for sending notification
+    private IRpcNotifier rpcNotifier;
+
+    // Once you start the server the package automatically call this method 
+    // so that your server class have the IRpcNotifier instance
+    public void AttachNotifier(IRpcNotifier notifier)
+    {
+        rpcNotifier = notifier;
+    }
+
+    public async Task BackgroundUpdate()
+    {
+        int tick = 0;
+
+        while (true)
+        {
+            string text = $"Update from C# server notifications. The current tick is {tick}";
+            await rpcNotifier.NotifyAsync("updateProgress", text);
+            RpcLog.Info($"Notifying client of the current tick {tick}");
+            tick++;
+            await Task.Delay(1500);
+        }
+    }
+}
+```
+
+Then on the dart side you want to subscribe to notification event.
+
+``` dart
+// we listen to notification coming from c# server
+csharpRpc.notifications.listen((notif) {
+    if (notif.method != 'updateProgress') return;
+    updateProgress(notif.params);
+});
+```
+
+## Logging in C#
+During RPC process when you want to log event you need to do that on STDERR rather than the usual STDOUT since that is used by RPC. This package provide a simple abstraction layer ``RpcLog`` class that automatically write to STDERR and format them the usual way of ASP.NET. If dont want it you can always just use ``Console.Error.WriteLine``.
+
 ## Native AOT Compatibility for C#
 This package for c# is somewhat compatible for AOT and trimming. You need to provide your own JsonSerializerContext for your own types and register your methods explicitly using delegate to avoid reflection. To start the server you need to use `StartWithExplicitAsync` rather than the usual `StartAsync`. This is the example:
 
@@ -119,7 +164,7 @@ await CsharpRpcServer.StartWithExplicitAsync(new Server(), JsonContext.Default,
 
 ## ⚡ Demo
 
-See the full [demo](https://github.com/YehudaKremer/FlutterCsharpRpc/tree/main/example/basic) of Flutter and C# app that communicate between them.
+See the full [demo](https://github.com/Codecooo/FlutterSharpRpc/tree/main/example/basic) of Flutter and C# app that communicate between them.
 
 ## 🤖 Code Generation
 
@@ -131,15 +176,15 @@ Also, it will be helpful if our csharp program have the same classes as our Flut
 
 To solve those problems and to speed up and enhance our development experience, we can use code generation to do the work for us.
 
-Take a look on a [example](https://github.com/YehudaKremer/FlutterCsharpRpc/tree/main/example/code_generation) Flutter app that use code generation solution.
+Take a look on a [example](https://github.com/Codecooo/FlutterSharpRpc/tree/main/example/code_generation) Flutter app that use code generation solution.
 
 ## 📦 Publish (Release Mode)
 
-While in development (Debug Mode) our C# program can located anywhere ([see in basic example](https://github.com/YehudaKremer/FlutterCsharpRpc/blob/5c57deb2026b15d58bfc9a6d34fcda6a43556ac5/example/basic/flutter_app/lib/main.dart#LL18C13-L18C13)),
-but when we build our Flutter app in Release mode, its time to move and publish the C# program into the Flutter build folder ([see in basic example](https://github.com/YehudaKremer/FlutterCsharpRpc/blob/5c57deb2026b15d58bfc9a6d34fcda6a43556ac5/example/basic/flutter_app/lib/main.dart#L17)).
+While in development (Debug Mode) our C# program can located anywhere ([see in basic example](https://github.com/Codecooo/FlutterSharpRpc/blob/e3ddf3a295704199ecde8fdf00b3def854fae0b5/example/basic/flutter_app/lib/main.dart#L16C1-L16C136)),
+but when we build our Flutter app in Release mode, its time to move and publish the C# program into the Flutter build folder ([see in basic example](https://github.com/Codecooo/FlutterSharpRpc/blob/e3ddf3a295704199ecde8fdf00b3def854fae0b5/example/basic/flutter_app/lib/main.dart#L15C1-L15C27)).
 
-- publish the C# into the Flutter Release-build folder ([example](https://github.com/YehudaKremer/FlutterCsharpRpc/blob/5c57deb2026b15d58bfc9a6d34fcda6a43556ac5/example/basic/CsharpApp/Properties/PublishProfiles/FolderProfile.pubxml#LL5C19-L5C19))
-- when publishing the C# program, set it as [SelfContained](https://github.com/YehudaKremer/FlutterCsharpRpc/blob/5c57deb2026b15d58bfc9a6d34fcda6a43556ac5/example/basic/CsharpApp/Properties/PublishProfiles/FolderProfile.pubxml#LL9C1-L9C1), so it will work on every device even if Dotnet is not installed
+- publish the C# into the Flutter Release-build folder ([example](https://github.com/YehudaKremer/FlutterCsharpRpc/blob/5c57deb2026b15d58bfc9a6d34fcda6a43556ac5/example/basic/CsharpApp/Properties/PublishProfiles/FolderProfile.pubxml))
+- when publishing the C# program, set it as [SelfContained](https://github.com/YehudaKremer/FlutterCsharpRpc/blob/5c57deb2026b15d58bfc9a6d34fcda6a43556ac5/example/basic/CsharpApp/Properties/PublishProfiles/FolderProfile.pubxml), so it will work on every device even if Dotnet is not installed
 
 Note: Those publish instructions are also suitable publish/deploy with [MSIX](https://pub.dev/packages/msix).
 

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:csharp_rpc/csharp_rpc.dart';
+import 'package:codecooo_csharp_rpc/codecooo_csharp_rpc.dart';
 import 'types.dart';
 
 late CsharpRpc csharpRpc;
@@ -13,7 +13,7 @@ Future<void> main() async {
   /// so, we can use the path: "csharp/CsharpApp.exe"
   var pathToCsharpExecutableFile = kReleaseMode
       ? 'csharp/CsharpApp'
-      : "/home/lagita/flutter/FlutterProjects/FlutterSharpRpc/example/basic/CsharpApp/bin/Release/net10.0/linux-x64/publish/CsharpApp";
+      : "../CsharpApp/bin/Debug/net10.0/linux-x64/CsharpApp";
 
   /// Create and start CsharpRpc instance.
   /// you can create this instance anywhere in your program, but remember to
@@ -46,7 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
+    // we listen to notification coming from c# server
     csharpRpc.notifications.listen((notif) {
+      if (notif.method != 'updateProgress') return;
       updateProgress(notif.params);
     });
   }

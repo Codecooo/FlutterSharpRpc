@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  csharp_rpc:
+  codecooo_csharp_rpc:
     path: ../../../dart
 
 dev_dependencies:

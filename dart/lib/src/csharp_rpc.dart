@@ -24,7 +24,7 @@ class CsharpRpc {
   /// Public getter – callers can `await for` or `listen` to notifications.
   Stream<RpcNotification> get notifications => _notificationCtrl.stream;
 
-  // helper to register a one‑shot callback
+  /// helper to register a one‑shot callback
   void onNotification(void Function(RpcNotification) handler) {
     notifications.listen(handler);
   }
@@ -188,15 +188,17 @@ class CsharpRpc {
         return;
       }
 
-      final dynamic rawParams = map['params']; // could be null, int, List, Map, etc.
+      final dynamic rawParams =
+          map['params']; // could be null, int, List, Map, etc.
 
       dynamic normalizedParams;
 
       if (rawParams == null) {
-        normalizedParams = null; 
+        normalizedParams = null;
       } else if (rawParams is List) {
         // If the list has exactly one element, unwrap it.
-        normalizedParams = (rawParams.length == 1) ? rawParams.first : rawParams;
+        normalizedParams =
+            (rawParams.length == 1) ? rawParams.first : rawParams;
       } else {
         // Primitive (int, double, String, bool) or a Map – keep as‑is.
         normalizedParams = rawParams;
@@ -225,7 +227,7 @@ class CsharpRpc {
   }
 
   /// write logs from the STDERR stream
-  dynamic _onLogReceived(event) {
+  dynamic _onLogReceived(dynamic event) {
     // use 'assert' to print logs only if debug mode
     // this is workaround because dart don't have the kDebugMode constant
     assert(() {

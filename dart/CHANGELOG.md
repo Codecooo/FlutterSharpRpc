@@ -1,3 +1,6 @@
+## 0.1.0
+- Update docs and examples
+
 ## 0.0.8
 - Add notifications capability so that flutter client could receive notification from server
 - Change how the package parsing JSON from Regex based to length‑prefixed frame decoder

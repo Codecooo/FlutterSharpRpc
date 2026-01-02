@@ -1,4 +1,4 @@
-// Simple model class for RpcNotification received from server
+/// Simple model class for RpcNotification received from server
 class RpcNotification {
   final String method;
   final dynamic params; 
@@ -6,7 +6,7 @@ class RpcNotification {
   RpcNotification(this.method, this.params);
 }
 
-// error wrapper for malformed notifications
+/// error wrapper for malformed notifications
 class NotificationError implements Exception {
   final Object cause;
   NotificationError(this.cause);
