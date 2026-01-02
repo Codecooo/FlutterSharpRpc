@@ -43,7 +43,7 @@ namespace FlutterSharpRpc
             }
         }
 
-        #if NET6_0_OR_GREATER
+        #if NET7_0_OR_GREATER
         /// <summary>
         /// Start a csharp-json-rpc server with explicit methods and types to allow
         /// it compatible for AOT environment.

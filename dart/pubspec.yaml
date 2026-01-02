@@ -1,6 +1,6 @@
 name: codecooo_csharp_rpc
 description: Execute C# code from Dart (Flutter) application via JSON-RPC protocol.
-version: 0.0.8
+version: 0.0.9
 maintainer: Codecooo
 homepage: https://github.com/Codecooo/FlutterSharpRpc
 issue_tracker: https://github.com/Codecooo/FlutterSharpRpc/issues

@@ -1,4 +1,4 @@
-## 0.1.0
+## 0.0.9
 - Update docs and examples
 
 ## 0.0.8
