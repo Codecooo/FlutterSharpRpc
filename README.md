@@ -149,6 +149,10 @@ csharpRpc.notifications.listen((notif) {
 During RPC process when you want to log event you need to do that on STDERR rather than the usual STDOUT since that is used by RPC. This package provide a simple abstraction layer ``RpcLog`` class that automatically write to STDERR and format them the usual way of ASP.NET. If dont want it you can always just use ``Console.Error.WriteLine``.
 
 ## Native AOT Compatibility for C#
+> Pre-release.
+> Only works for 0.1.0-alpha version
+
+
 This package for c# is somewhat compatible for AOT and trimming. You need to provide your own JsonSerializerContext for your own types and register your methods explicitly using delegate to avoid reflection. To start the server you need to use `StartWithExplicitAsync` rather than the usual `StartAsync`. This is the example:
 
 ``` csharp
