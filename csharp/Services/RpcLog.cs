@@ -2,7 +2,6 @@ using System;
 
 namespace FlutterSharpRpc.Services
 {
-    #nullable enable
     /// <summary>
     /// Class for logging in RPC using STDERR to not poison STDOUT used for the RPC process
     /// </summary>
@@ -14,7 +13,7 @@ namespace FlutterSharpRpc.Services
         public static void Warn(string message)
             => Write("WARN", message);
 
-        public static void Error(string message, Exception? ex = null)
+        public static void Error(string message, Exception ex = null)
         {
             Write("ERROR", message);
             if (ex != null)
