@@ -104,21 +104,11 @@ public class Server
 ```
 
 ## Send Notification From Server to Flutter
-If you want your server to make notification to flutter, implement the ``IRpcNotifierAware`` to your server class and then once you start the server the server class will have notifier instance registered that you can use to notify flutter. Remember notification dont have any response so it is fire and forget for example background process update. Here is the example
+If you want your server to make notification to flutter, inherit ``RpcNotifier`` to your server class and then once you start the server the server class will have notifier instance registered that you can use to notify flutter. Remember notification dont have any response so it is fire and forget for example background process update. Here is the example
 
 ``` csharp
-public class Server : IRpcNotifierAware 
+public class Server : RpcNotifier 
 {
-    // IRpcNotifier instance for sending notification
-    private IRpcNotifier rpcNotifier;
-
-    // Once you start the server the package automatically call this method 
-    // so that your server class have the IRpcNotifier instance
-    public void AttachNotifier(IRpcNotifier notifier)
-    {
-        rpcNotifier = notifier;
-    }
-
     public async Task BackgroundUpdate()
     {
         int tick = 0;
@@ -126,7 +116,7 @@ public class Server : IRpcNotifierAware
         while (true)
         {
             string text = $"Update from C# server notifications. The current tick is {tick}";
-            await rpcNotifier.NotifyAsync("updateProgress", text);
+            await JsonRpc.NotifyAsync("updateProgress", text);
             RpcLog.Info($"Notifying client of the current tick {tick}");
             tick++;
             await Task.Delay(1500);
@@ -149,7 +139,7 @@ csharpRpc.notifications.listen((notif) {
 During RPC process when you want to log event you need to do that on STDERR rather than the usual STDOUT since that is used by RPC. This package provide a simple abstraction layer ``RpcLog`` class that automatically write to STDERR and format them the usual way of ASP.NET. If dont want it you can always just use ``Console.Error.WriteLine``.
 
 ## Native AOT Compatibility for C#
-> Pre-release. Only works for 0.1.0-alpha version
+> Pre-release. Only works for 0.1.0-alpha version onwards
 
 
 This package for c# is somewhat compatible for AOT and trimming. You need to provide your own JsonSerializerContext for your own types and register your methods explicitly using delegate to avoid reflection. To start the server you need to use `StartWithExplicitAsync` rather than the usual `StartAsync`. This is the example:

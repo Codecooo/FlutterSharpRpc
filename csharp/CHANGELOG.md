@@ -1,3 +1,6 @@
+## 0.0.5
+- Add abstract class RpcNotifer instead of using interface
+
 ## 0.0.4
 - Remove AOT for pre release only
 - Change target framework to netstandard2.0

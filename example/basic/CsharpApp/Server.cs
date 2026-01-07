@@ -3,32 +3,19 @@
 
 /// <summary>
 /// Class that contains the JSON-RPC methods
-/// IRpcNotifierAware is only used if you plan for your server to send notification
+/// Inherit RpcNotifier class instead of IRpcNotifierAware if you plan for your server to send notifications
 /// if you dont then remove it
 /// </summary>
-public class Server : IRpcNotifierAware 
+public class Server : RpcNotifier 
 {
-    // IRpcNotifier instance for sending notification
-    private IRpcNotifier rpcNotifier;
-
-    public void AttachNotifier(IRpcNotifier notifier)
-    {
-        rpcNotifier = notifier;
-    }
-
     public async Task BackgroundUpdate()
     {
-        if (rpcNotifier is null)
-        {
-            return;
-        }
-
         int tick = 0;
 
         while (true)
         {
             string text = $"Update from C# server notifications. The current tick is {tick}";
-            await rpcNotifier.NotifyAsync("updateProgress", text);
+            await JsonRpc.NotifyAsync("updateProgress", text);
             RpcLog.Info($"Notifying client of the current tick {tick}");
             tick++;
             await Task.Delay(1500);
@@ -58,5 +45,10 @@ public class Server : IRpcNotifierAware
         {
             Files = Directory.GetFiles(request.FolderPath!).Take(10).ToArray()
         };
+    }
+
+    public void AttachNotifier(IRpcNotifier notifier)
+    {
+        throw new NotImplementedException();
     }
 }

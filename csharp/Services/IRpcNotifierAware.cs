@@ -1,8 +1,11 @@
+using System;
+
 namespace FlutterSharpRpc.Services
 {
     /// <summary>
     /// Provide a base implementation for a class to be able to notify others through RPC
     /// </summary>
+    [Obsolete("Inherit RpcNotifier class instead")]
     public interface IRpcNotifierAware
     {
         /// <summary>
