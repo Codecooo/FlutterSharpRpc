@@ -1,7 +1,10 @@
+## 0.1.4
+- Hotfix for RpcLog for Dispose and BeginScope no longer throw exception for null
+
 ## 0.1.3
 - Added AOT support to stable
 - Changed RpcLog to be integrated with ILogger for easier logging if you need ILogger(old ways still available)
-- 
+
 ## 0.0.5
 - Add abstract class RpcNotifer instead of using interface
 

@@ -1,23 +1,8 @@
 using System;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FlutterSharpRpc.Services
 {
-    /// <summary>
-    /// A simple logger provider and logger implementation for RPC to log to STDERR without polluting STDOUT used for the RPC process
-    /// </summary>
-    public class RpcLogProvider : ILoggerProvider
-    {
-        public ILogger CreateLogger(string categoryName)
-            => new RpcLog(categoryName);
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     /// <summary>
     /// Class for logging in RPC using STDERR to not poison STDOUT used for the RPC process
     /// </summary>
@@ -84,19 +69,17 @@ namespace FlutterSharpRpc.Services
         public bool IsEnabled(LogLevel logLevel)
             => true;
 
-        public IDisposable BeginScope<TState>(TState state) 
-            => throw new NotImplementedException();
+        public IDisposable BeginScope<TState>(TState state)
+            => NullScope.Instance;
     }
 
-    public static class RpcLogBuilderExtensions
+    /// <summary>
+    /// A null scope implementation for ILogger.BeginScope to avoid unnecessary allocations since we don't need scopes for this simple logger
+    /// </summary>
+    internal sealed class NullScope : IDisposable
     {
-        /// <summary>
-        /// Extension method to add the RpcLogProvider to the logging providers, so you can see the logs in the console of your Flutter app
-        /// </summary>
-        public static ILoggingBuilder AddRpcLogging(this ILoggingBuilder builder)
-        {
-            builder.Services.AddSingleton<ILoggerProvider, RpcLogProvider>();
-            return builder;
-        }
+        public static NullScope Instance { get; } = new();
+        private NullScope() { }
+        public void Dispose() { }
     }
 }
