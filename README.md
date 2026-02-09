@@ -104,11 +104,10 @@ public class Server
 ```
 
 ## Send Notification From Server to Flutter
+If you want your server to make notification to flutter, inherit ``RpcNotifier`` to your server class and then once you start the server the server class will have notifier instance registered that you can use to notify flutter. Remember notification dont have any response so it is fire and forget for example background process update. Here is the example
 
-If you want your server to make notification to flutter, inherit `RpcNotifier` to your server class and then once you start the server the server class will have notifier instance registered that you can use to notify flutter. Remember notification dont have any response so it is fire and forget for example background process update. Here is the example
-
-```csharp
-public class Server : RpcNotifier
+``` csharp
+public class Server : RpcNotifier 
 {
     public async Task BackgroundUpdate()
     {

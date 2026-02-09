@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Class that contains the JSON-RPC methods
-/// IRpcNotifierAware is only used if you plan for your server to send notification
+/// Inherit RpcNotifier class instead of IRpcNotifierAware if you plan for your server to send notifications
 /// if you dont then remove it
 /// </summary>
 public class RpcServer(ILogger<RpcServer> logger) : RpcNotifier
@@ -46,5 +46,10 @@ public class RpcServer(ILogger<RpcServer> logger) : RpcNotifier
         {
             Files = Directory.GetFiles(request.FolderPath!).Take(10).ToArray()
         };
+    }
+
+    public void AttachNotifier(IRpcNotifier notifier)
+    {
+        throw new NotImplementedException();
     }
 }
