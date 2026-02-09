@@ -2,9 +2,9 @@
 [![pub package](https://img.shields.io/pub/v/csharp_rpc.svg?color=blue)](https://pub.dev/packages/codecooo_csharp_rpc)
 
 # Flutter Csharp RPC
-This repo is a fork from the original [FlutterCsharpRpc](https://github.com/YehudaKremer/FlutterCsharpRpc). This fork update and improve upon the original one with feature such
-as Server notifications and a test for native AOT compatibility. 
 
+This repo is a fork from the original [FlutterCsharpRpc](https://github.com/YehudaKremer/FlutterCsharpRpc). This fork update and improve upon the original one with feature such
+as Server notifications and a test for native AOT compatibility.
 
 With this package we can execute C# code from Dart (Flutter) application via JSON-RPC protocol.
 
@@ -127,7 +127,7 @@ public class Server : RpcNotifier
 
 Then on the dart side you want to subscribe to notification event.
 
-``` dart
+```dart
 // we listen to notification coming from c# server
 csharpRpc.notifications.listen((notif) {
     if (notif.method != 'updateProgress') return;
@@ -136,15 +136,24 @@ csharpRpc.notifications.listen((notif) {
 ```
 
 ## Logging in C#
-During RPC process when you want to log event you need to do that on STDERR rather than the usual STDOUT since that is used by RPC. This package provide a simple abstraction layer ``RpcLog`` class that automatically write to STDERR and format them the usual way of ASP.NET. If dont want it you can always just use ``Console.Error.WriteLine``.
+
+During RPC process when you want to log event you need to do that on STDERR rather than the usual STDOUT since that is used by RPC. This package provide a simple abstraction layer `RpcLog` class that automatically write to STDERR and format them the usual way of ASP.NET. Not only that but it also comes built-in with ILogger integration in C# using ILoggerProvider, you can register it on one line.
+
+```csharp
+bullder.AddLogging(builder =>
+    // IMPORTANT: your server class category name must contain "RPC" for example here the class name is "RpcServer"
+    // so that the RpcLogProvider can log it, otherwise it will be ignored and not logged
+    builder.AddRpcLogging();
+);
+```
+
+If dont want it you can always just use `Console.Error.WriteLine`.
 
 ## Native AOT Compatibility for C#
-> Pre-release. Only works for 0.1.0-alpha version onwards
-
 
 This package for c# is somewhat compatible for AOT and trimming. You need to provide your own JsonSerializerContext for your own types and register your methods explicitly using delegate to avoid reflection. To start the server you need to use `StartWithExplicitAsync` rather than the usual `StartAsync`. This is the example:
 
-``` csharp
+```csharp
 await CsharpRpcServer.StartWithExplicitAsync(new Server(), JsonContext.Default,
     async (rpc, server) =>
     {
@@ -182,6 +191,7 @@ but when we build our Flutter app in Release mode, its time to move and publish 
 Note: Those publish instructions are also suitable publish/deploy with [MSIX](https://pub.dev/packages/msix).
 
 ## 🙏 Credit
+
 Thanks to YehudaKremer for making the original [FlutterCsharpRpc](https://github.com/YehudaKremer/FlutterCsharpRpc) which this package based from. <br>
 This package based on Michael K Snead's article on medium: [Flutter, C# and JSON RPC](https://medium.com/@aikeru/flutter-c-and-json-rpc-f325be6764bd)
 

@@ -17,10 +17,11 @@ namespace FlutterSharpRpc.Services
         {
             using (var stdin = Console.OpenStandardInput())
             using (var stdout = Console.OpenStandardOutput())
+
             using (var duplex = FullDuplexStream.Splice(stdin, stdout))
             {
                 formatter.JsonSerializerOptions.PropertyNamingPolicy =
-                    JsonNamingPolicy.CamelCase;
+                   JsonNamingPolicy.CamelCase;
 
                 formatter.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 
@@ -28,6 +29,7 @@ namespace FlutterSharpRpc.Services
                     duplex,
                     duplex,
                     formatter))
+
                 using (var rpc = new JsonRpc(handler))
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -41,8 +43,17 @@ namespace FlutterSharpRpc.Services
                     }
 #pragma warning restore CS0618 // Type or member is obsolete
 
-                    rpc.AddLocalRpcTarget(server);
-                    RpcLog.Info($"RPC target registered: {typeof(TServer).FullName}");
+                    // If we dont set registerMethods it means we are using normal mode instead of aot
+                    if (registerMethods == default)
+                    {
+                        rpc.AddLocalRpcTarget(server);
+                        RpcLog.Info($"RPC target registered: {typeof(TServer).FullName}");
+                    }
+                    else
+                    {
+                        await registerMethods(rpc, server);
+                        RpcLog.Info($"RPC target registered: {typeof(TServer).FullName}");
+                    }
 
                     rpc.Disconnected += (_, e) => RpcLog.Warn($"RPC disconnected: {e.Reason}");
 
