@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FlutterSharpRpc.Services;
 using StreamJsonRpc;
+using System.Text.Json.Serialization.Metadata;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FlutterSharpRpc

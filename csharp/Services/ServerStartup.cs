@@ -12,6 +12,7 @@ namespace FlutterSharpRpc.Services
         internal static async Task StartServer<TServer>(
             TServer server,
             SystemTextJsonFormatter formatter,
+            Func<JsonRpc, TServer, Task> registerMethods = default,
             CancellationToken cancellationToken = default)
             where TServer : class
         {
