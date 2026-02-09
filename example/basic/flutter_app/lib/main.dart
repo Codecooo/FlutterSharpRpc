@@ -13,7 +13,7 @@ Future<void> main() async {
   /// so, we can use the path: "csharp/CsharpApp.exe"
   var pathToCsharpExecutableFile = kReleaseMode
       ? 'csharp/CsharpApp'
-      : "../CsharpApp/bin/Debug/net10.0/linux-x64/CsharpApp";
+      : "..CsharpApp/bin/Release/net10.0/Debug/CsharpApp";
 
   /// Create and start CsharpRpc instance.
   /// you can create this instance anywhere in your program, but remember to
@@ -51,6 +51,12 @@ class _MyHomePageState extends State<MyHomePage> {
       if (notif.method != 'updateProgress') return;
       updateProgress(notif.params);
     });
+  }
+
+  @override
+  void dispose() {
+    csharpRpc.dispose();
+    super.dispose();
   }
 
   final _textFieldController = TextEditingController();

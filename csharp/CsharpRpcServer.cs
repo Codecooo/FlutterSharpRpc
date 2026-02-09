@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FlutterSharpRpc.Services;
 using StreamJsonRpc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FlutterSharpRpc
 {
@@ -27,9 +28,9 @@ namespace FlutterSharpRpc
             RpcLog.Info("Starting csharp-json-rpc server....");
             RpcLog.Info($"Runtime: {Environment.Version}");
             RpcLog.Info($"OS: {Environment.OSVersion}");
-            #if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
                 RpcLog.Info($"ProcessId: {Environment.ProcessId}");
-            #endif
+#endif
 
             try
             {
@@ -43,7 +44,7 @@ namespace FlutterSharpRpc
             }
         }
 
-        #if NET7_0_OR_GREATER
+#if NET7_0_OR_GREATER
         /// <summary>
         /// Start a csharp-json-rpc server with explicit methods and types to allow
         /// it compatible for AOT environment.
@@ -64,20 +65,13 @@ namespace FlutterSharpRpc
             RpcLog.Info("Starting csharp-json-rpc server....");
             RpcLog.Info($"Runtime: {Environment.Version}");
             RpcLog.Info($"OS: {Environment.OSVersion}");
-            #if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
                 RpcLog.Info($"ProcessId: {Environment.ProcessId}");
-            #endif
+#endif
 
             try
             {
-                var formatter = new SystemTextJsonFormatter();
-                // Combine the type info from out base json context with consumer provided one
-                formatter.JsonSerializerOptions.TypeInfoResolver =
-                    JsonTypeInfoResolver.Combine(
-                        jsonTypeInfo,
-                        RpcJsonContext.Default
-                );
-
+                var formatter = CreateFormatter(jsonTypeInfo);
                 await ServerStartup.StartServer(server, formatter, registerMethods, cancellationToken);
             }
             catch (Exception ex)
@@ -87,6 +81,20 @@ namespace FlutterSharpRpc
             }
         }
 
-        #endif
+        [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Using the Json source generator.")]
+        [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Using the Json source generator.")]
+        private static SystemTextJsonFormatter CreateFormatter(IJsonTypeInfoResolver jsonTypeInfo)
+        {
+            var formatter = new SystemTextJsonFormatter();
+            // Combine the type info from out base json context with consumer provided one
+            formatter.JsonSerializerOptions.TypeInfoResolver =
+                JsonTypeInfoResolver.Combine(
+                    jsonTypeInfo,
+                    RpcJsonContext.Default
+                );
+
+            return formatter;
+        }
+#endif
     }
 }

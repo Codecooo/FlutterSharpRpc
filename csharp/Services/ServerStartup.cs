@@ -33,10 +33,16 @@ namespace FlutterSharpRpc.Services
 
                 using (var rpc = new JsonRpc(handler))
                 {
-                    if (server is IRpcNotifierAware rpcNotifierAware)
+#pragma warning disable CS0618 // Type or member is obsolete
+                    if (server is RpcNotifier rpcNotifier)
                     {
-                        rpcNotifierAware.AttachNotifier(new RpcNotifier(rpc));
+                        rpcNotifier.AttachNotifier(rpc);
                     }
+                    else if (server is IRpcNotifierAware notifierAware)
+                    {
+                        notifierAware.AttachNotifier(new JsonRpcNotifier(rpc));
+                    }
+#pragma warning restore CS0618 // Type or member is obsolete
 
                     // If we dont set registerMethods it means we are using normal mode instead of aot
                     if (registerMethods == default)

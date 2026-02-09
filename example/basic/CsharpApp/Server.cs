@@ -1,4 +1,5 @@
 ﻿using FlutterSharpRpc.Services;
+using Microsoft.Extensions.Logging;
 
 
 /// <summary>
@@ -6,30 +7,17 @@
 /// IRpcNotifierAware is only used if you plan for your server to send notification
 /// if you dont then remove it
 /// </summary>
-public class Server : IRpcNotifierAware 
+public class RpcServer(ILogger<RpcServer> logger) : RpcNotifier
 {
-    // IRpcNotifier instance for sending notification
-    private IRpcNotifier rpcNotifier;
-
-    public void AttachNotifier(IRpcNotifier notifier)
-    {
-        rpcNotifier = notifier;
-    }
-
     public async Task BackgroundUpdate()
     {
-        if (rpcNotifier is null)
-        {
-            return;
-        }
-
         int tick = 0;
 
         while (true)
         {
             string text = $"Update from C# server notifications. The current tick is {tick}";
-            await rpcNotifier.NotifyAsync("updateProgress", text);
-            RpcLog.Info($"Notifying client of the current tick {tick}");
+            await JsonRpc.NotifyAsync("updateProgress", text);
+            logger.LogInformation($"Notifying client of the current tick {tick}");
             tick++;
             await Task.Delay(1500);
         }
@@ -38,21 +26,21 @@ public class Server : IRpcNotifierAware
     public DateTime GetCurrentDateTime()
     {
         // Log to STDERR so we wont corrupt the STDOUT pipe that we using for JSON-RPC.
-        RpcLog.Info($"Received 'GetCurrentDateTime' request");
+        logger.LogInformation($"Received 'GetCurrentDateTime' request");
 
         return DateTime.Now;
     }
 
     public int SumNumbers(int a, int b)
     {
-        RpcLog.Info($"Received 'SumNumbers' request");
+        logger.LogInformation($"Received 'SumNumbers' request");
 
         return a + b;
     }
 
     public FilesInFolderResponse GetFilesInFolder(GetFilesInFolderRequest request)
     {
-        RpcLog.Info($"Received 'GetFilesInFolder' request");
+        logger.LogInformation($"Received 'GetFilesInFolder' request");
 
         return new FilesInFolderResponse
         {
