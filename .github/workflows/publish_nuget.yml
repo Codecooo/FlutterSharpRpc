@@ -40,6 +40,7 @@ jobs:
           user: ${{ secrets.NUGET_USER }}
 
       - name: Push package
+        working-directory: csharp
         run: |
           dotnet nuget push "artifacts/*.nupkg" \
             --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
