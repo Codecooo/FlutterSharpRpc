@@ -1,3 +1,6 @@
+## 0.1.0
+- Make library stop listening to STDERR automatically, now application decides to whether or not listening to STDERR for logs by using csharpProcess property
+
 ## 0.0.9
 - Update docs and examples
 

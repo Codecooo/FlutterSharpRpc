@@ -1,0 +1,27 @@
+name: Publish pub.dev
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        working-directory: dart
+        run: dart pub get
+
+      - name: Publish package
+        working-directory: dart
+        run: dart pub publish
