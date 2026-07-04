@@ -22,7 +22,7 @@ namespace FlutterSharpRpc.Services
     public static class RpcLogBuilderExtensions
     {
         /// <summary>
-        /// Extension method to add the RpcLogProvider to the logging providers, so you can see the logs in the console of your Flutter app
+        /// Extension method to add the RpcLogProvider to the logging providers
         /// </summary>
         public static ILoggingBuilder AddRpcLogging(this ILoggingBuilder builder)
         {

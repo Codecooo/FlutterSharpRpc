@@ -141,14 +141,13 @@ During RPC process when you want to log event you need to do that on STDERR rath
 
 ```csharp
 bullder.AddLogging(builder =>
-    // IMPORTANT: your server class category name must contain "RPC" for example here the class name is "RpcServer"
-    // so that the RpcLogProvider can log it, otherwise it will be ignored and not logged
     builder.AddRpcLogging();
 );
 ```
 
 If dont want it you can always just use `Console.Error.WriteLine`.
-
+Note: you still need to configure how to receive the logs and you can choose to listen to logs in STDERR by
+using csharpProcess getter in dart. The default behavior is not listening to STDERR
 ## Native AOT Compatibility for C#
 
 This package for c# is somewhat compatible for AOT and trimming. You need to provide your own JsonSerializerContext for your own types and register your methods explicitly using delegate to avoid reflection. To start the server you need to use `StartWithExplicitAsync` rather than the usual `StartAsync`. This is the example:
