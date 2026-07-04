@@ -10,12 +10,11 @@ import 'csharp_rpc_request.dart';
 
 /// Manage the communication between dart and C# RPC-server
 class CsharpRpc {
-  Process? csharpProcess;
+  Process? _process;
   final String _executablePath;
   final Uuid _uuid = const Uuid();
   final List<CsharpRpcRequest> _requests = [];
   late StreamSubscription<List<int>> _stdoutSub;
-  late StreamSubscription<List<int>> _stderrSub;
   final _logger = Logger('CsharpRpc');
 
   final StreamController<RpcNotification> _notificationCtrl =
@@ -23,7 +22,17 @@ class CsharpRpc {
 
   /// Public getter – callers can `await for` or `listen` to notifications.
   Stream<RpcNotification> get notifications => _notificationCtrl.stream;
-
+  
+  /// Returns the underlying C# process.
+  /// This allows applications to attach listeners to stderr,
+  /// inspect the process, or manage additional process-level behavior.
+  Process get csharpProcess {
+    if (_process == null) {
+      throw StateError('RPC process has not been started.');
+    }
+    return _process!;
+  }
+  
   /// helper to register a one‑shot callback
   void onNotification(void Function(RpcNotification) handler) {
     notifications.listen(handler);
@@ -47,17 +56,15 @@ class CsharpRpc {
 
   /// Start C#-RPC child process.
   Future<CsharpRpc> start() async {
-    csharpProcess = await Process.start(_executablePath, []);
-    _stdoutSub = csharpProcess!.stdout.listen(_onDataReceived);
-    _stderrSub = csharpProcess!.stderr.listen(_onLogReceived);
+    _process = await Process.start(_executablePath, []);
+    _stdoutSub = _process!.stdout.listen(_onDataReceived);
     return this;
   }
 
   /// Dispose the C#-RPC child process
   void dispose() {
     _stdoutSub.cancel();
-    _stderrSub.cancel();
-    csharpProcess?.kill();
+    _process?.kill();
     _notificationCtrl.close();
     _requests.clear();
   }
@@ -80,7 +87,7 @@ class CsharpRpc {
     var messagePayload = '$contentLengthHeader\r\n\r\n$jsonEncodedBody';
 
     /// write ('send') the request to the STDIN stream
-    csharpProcess?.stdin.write(messagePayload);
+    _process?.stdin.write(messagePayload);
 
     /// create a CsharpRpcRequest instance for this request
     var csharpRpcRequest = CsharpRpcRequest<TResult>(id);
@@ -224,17 +231,6 @@ class CsharpRpc {
     }
 
     _requests.remove(request);
-  }
-
-  /// write logs from the STDERR stream
-  dynamic _onLogReceived(dynamic event) {
-    // use 'assert' to print logs only if debug mode
-    // this is workaround because dart don't have the kDebugMode constant
-    assert(() {
-      // ignore: avoid_print
-      print(utf8.decode(event));
-      return true;
-    }());
   }
 
   void _failAllPending(Object error) {
