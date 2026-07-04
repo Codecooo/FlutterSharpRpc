@@ -2,8 +2,8 @@ name: Publish pub.dev
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
   publish:
