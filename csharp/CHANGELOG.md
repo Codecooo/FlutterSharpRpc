@@ -1,3 +1,6 @@
+## 0.1.5
+- Update the dependency for StreamJsonRpc to fix security advisories
+
 ## 0.1.4
 - Hotfix for RpcLog for Dispose and BeginScope no longer throw exception for null
 
